@@ -1,0 +1,49 @@
+# our rewrite function
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: rewriter
+spec:
+  template:
+    spec:
+      containers:
+        - image: pilhuhn/rewrite-funq
+          env:
+            - name: RULES
+              value: |
+                  key3: .meta.source
+                  key1: $key1 + .meta.id
+                  -key2
+          imagePullPolicy: Always
+---
+# the sequence that calls the rewriter
+apiVersion: flows.knative.dev/v1
+kind: Sequence
+metadata:
+  name: sequence
+spec:
+  channelTemplate:
+    apiVersion: messaging.knative.dev/v1
+    kind: InMemoryChannel
+  steps:
+    - ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: rewriter
+    - ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: event-display
+---
+# the trigger that pulls messages from the broker
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: sequence-trigger
+spec:
+  broker: mybroker
+  subscriber:
+    ref:
+      apiVersion: flows.knative.dev/v1
+      kind: Sequence
+      name: sequence
