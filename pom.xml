@@ -37,8 +37,10 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy</artifactId>
+      <artifactId>quarkus-funqy-knative-events</artifactId>
     </dependency>
+
+    <!-- test -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
@@ -49,10 +51,7 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-funqy-knative-events</artifactId>
-    </dependency>
+
   </dependencies>
   <build>
     <plugins>

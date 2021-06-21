@@ -9,7 +9,6 @@ import io.quarkus.funqy.knative.events.CloudEventMapping;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.inject.Inject;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -29,13 +28,7 @@ public class Rewrite {
 
         System.out.println("With context >> " + eventInfo );
         System.out.println("Rules >>" + rulesEnv + "<<");
-        printChars(rulesEnv);
-        System.out.print("Separator ");
-        String sep = System.lineSeparator();
-        printChars(sep);
 
-
-        // Map payload = input.getEvents().get(0).getPayload();
         List events = (List) input.get("events");
         Map<String,Object> tmpMap = (Map<String, Object>) events.get(0);
         String jsonPayload = (String) tmpMap.get("payload");
@@ -43,7 +36,6 @@ public class Rewrite {
 
         String[] rules = rulesEnv.split(System.lineSeparator());
         for (String rule : rules) {
-            System.out.println("Found rule >>" + rule + "<<");
             var tmp = rule.trim();
             if (tmp.isEmpty()) {
                 continue;
@@ -58,7 +50,6 @@ public class Rewrite {
                     throw new IllegalStateException("Illegal rule " + tmp );
                 }
                 var value = eval(parts[1].trim(), eventInfo, payload);
-                System.out.printf("Eval'd to %s -> %s %n" , key, value );
                 payload.put(key, value);
             }
         }
@@ -72,16 +63,8 @@ public class Rewrite {
         return input;
     }
 
-    private void printChars(String in) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : in.getBytes(StandardCharsets.UTF_8)) {
-            var tmp = String.format("%2x [%c]  " , b, b);
-            sb.append(tmp);
-        }
-        System.out.println(sb.toString());
-    }
 
-    // Evaluate the entry on the RHS
+    // Evaluate the entry on the RHS of a rule
     String eval(String in, CloudEvent ce, Map payload) {
         // TODO we should do a real parser here , but for now this is good enough
 
