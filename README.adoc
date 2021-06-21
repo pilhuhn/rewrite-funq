@@ -15,7 +15,30 @@ In the scenario we rewrite the payload of an `Action` from https://github.com/Re
 
 Source can be anything that creates CloudEvents with an `Action` payload.
 
+The rewrite rules are encoded within the environment of the K-Service ( see
+link:src/main/knative/kpipe.yml[kpipe.yml] ):
 
+[source,yaml]
+----
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: rewriter
+spec:
+  template:
+    spec:
+      containers:
+        - image: pilhuhn/rewrite-funq
+          env:
+            - name: RULES
+              value: |
+                  key3: .ce.source       #1
+                  key1: $key1 + .ce.id   #2
+                  -key2                    #3
+----
+<1> Set `key3` to the name of the CloudEvent source
+<2> Set `key1` to the previous value and append the CloudEvent id
+<3> Delete `key2`
 
 
 ## Running the application in dev mode

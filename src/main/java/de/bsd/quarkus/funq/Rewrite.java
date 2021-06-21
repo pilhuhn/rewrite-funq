@@ -90,10 +90,10 @@ public class Rewrite {
         for (String tmp : entries) {
             String entry = tmp.trim();
 
-            if (entry.equals(".meta.source")) {
+            if (entry.equals(".ce.source")) {
                 sb.append(ce.source());
             }
-            if (entry.equals(".meta.id")) {
+            if (entry.equals(".ce.id")) {
                 sb.append(ce.id());
             }
             if (entry.startsWith("$")) {

@@ -11,8 +11,8 @@ spec:
           env:
             - name: RULES
               value: |
-                  key3: .meta.source
-                  key1: $key1 + .meta.id
+                  key3: .ce.source
+                  key1: $key1 + .ce.id
                   -key2
           imagePullPolicy: Always
 ---
