@@ -13,7 +13,8 @@ public class TestLifecycleManager implements QuarkusTestResourceLifecycleManager
     @Override
     public Map<String, String> start() {
 
-        String rules = "  \n        key3: .meta.source                \\n   key1: $key1 + .meta.id       \\n            -key2";
+        String sep = System.lineSeparator();
+        String rules = "key3: .meta.source" + sep + "key1: $key1 + .meta.id" + sep + "-key2" + sep;
 
         HashMap<String, String> props = new HashMap<>();
         props.put("rules",rules);

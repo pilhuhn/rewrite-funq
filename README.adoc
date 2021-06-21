@@ -2,6 +2,22 @@
 
 This project is a content-rewriting function for Knative using Quarkus funq
 
+== Scenario
+
+In the scenario we rewrite the payload of an `Action` from https://github.com/RedHatInsights/insights-schemas-java[Java Avro Schemas] in a KNative sequence.
+
+[ditaa]
+....
++--------+  Action   +----------+   Action'  +-------+
+| Source | --------> | rewriter |  --------> |  sink |
++--------+           +----------+            +-------+
+....
+
+Source can be anything that creates CloudEvents with an `Action` payload.
+
+
+
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
@@ -20,10 +36,22 @@ The application can be packaged using:
 It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
 Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
+== Upload to container repo
+
+[source,bash]
+----
+docker build -f src/main/docker/Dockerfile.jvm -t pilhuhn/rewrite-funq .
+docker push pilhuhn/rewrite-funq
+----
+
+== Deploy to knative
+
+[source,bash]
+----
+oc apply -f src/main/knative/kpipe.yml
+----
+
+
 
 The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
 

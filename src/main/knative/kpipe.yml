@@ -42,6 +42,10 @@ metadata:
   name: sequence-trigger
 spec:
   broker: mybroker
+  filter:
+    attributes:
+      type: "com.redhat.cloud.notification"
+      source: "notifications-gw"
   subscriber:
     ref:
       apiVersion: flows.knative.dev/v1
