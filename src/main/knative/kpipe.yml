@@ -1,21 +1,3 @@
-# our rewrite function
-apiVersion: serving.knative.dev/v1
-kind: Service
-metadata:
-  name: rewriter
-spec:
-  template:
-    spec:
-      containers:
-        - image: pilhuhn/rewrite-funq
-          env:
-            - name: RULES
-              value: |
-                  key3: .ce.source
-                  key1: $key1 + .ce.id
-                  -key2
-          imagePullPolicy: Always
----
 # the sequence that calls the rewriter
 apiVersion: flows.knative.dev/v1
 kind: Sequence

@@ -16,7 +16,7 @@ In the scenario we rewrite the payload of an `Action` from https://github.com/Re
 Source can be anything that creates CloudEvents with an `Action` payload.
 
 The rewrite rules are encoded within the environment of the K-Service ( see
-link:src/main/knative/kpipe.yml[kpipe.yml] ):
+link:src/main/knative/ksvc.yml[ksvc.yml] ):
 
 [source,yaml]
 ----
@@ -67,10 +67,11 @@ docker build -f src/main/docker/Dockerfile.jvm -t pilhuhn/rewrite-funq .
 docker push pilhuhn/rewrite-funq
 ----
 
-== Deploy to knative
+== Deploy to Knative
 
 [source,bash]
 ----
+oc apply -f src/main/knative/ksvc.yml
 oc apply -f src/main/knative/kpipe.yml
 ----
 
@@ -86,9 +87,24 @@ You can create a native executable using:
 ```
 
 Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+
+.NOTE
+This is also needed if your development env is not Linux
+
 ```shell script
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
+
+=== Container image
+
+In case of the native image use one of the `Dockerfile.native*` files
+
+[script,bash]
+----
+ docker build -f src/main/docker/Dockerfile.native-distroless -t pilhuhn/rewrite-funq-native .
+----
+
+Don't forget to use this image name in kpipe.yml
 
 You can then execute your native executable with: `./target/rewrite-funq-1.0.0-SNAPSHOT-runner`
 

@@ -29,6 +29,7 @@ public class RewriteTest {
                 .header("ce-id", id)
                 .header("ce-type", "com.redhat.cloud.notification")
                 .header("ce-source", "test")
+                .header("ce-rhaccount", 54321)
                 .body(jsonPayload)
                 .post("/")
                 .then().statusCode(200)
